@@ -95,7 +95,7 @@ struct IFSDesignView: View {
     @Binding var size: CGSize
     
     var body: some View {
-        HStack{
+        HStack {
             ChildSizeReader(size: $size) {
                 ForEach(transforms){ t in
                     AffineTransformControl(color: Color(red: 0, green: 1, blue: 0, opacity: 0.1))
@@ -104,7 +104,7 @@ struct IFSDesignView: View {
             }
             .border(.black)
             .aspectRatio(CGSize(width: 1, height: 1), contentMode: .fit)
-            Button("Add") {
+            Button("Add Transform") {
                 transforms.append(AffineTransform())
             }
         }

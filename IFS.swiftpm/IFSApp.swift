@@ -10,9 +10,14 @@ struct IFSApp: App {
     }
 }
 
+
 struct MainView: View {
+    enum Displaying {
+        case design, visualize, image
+    }
+    
     @State var ifs: IFSSystem = IFSSystem()
-    @State var isDesignView: Bool = true
+    @State var currentView: Displaying = .design
     @State var transforms = [AffineTransform(), AffineTransform()]
     @State var designerSize: CGSize = CGSize.zero
     
@@ -30,25 +35,39 @@ struct MainView: View {
     //                              jHat: CGPoint(x: 0, y: 0.5),
     //                              shift: CGPoint(x: 0.25, y: 0.433)), weight: 2)
     
+    func updateIFS() {
+        let normalizeTr = getUnitRecToUpsideDown(size: designerSize).inverted()
+        let newIFS = IFSSystem()
+        for t in transforms {
+            newIFS.addTransform(
+                t.toCGAffineTransform(normalizeTr)
+            )
+        }
+        ifs = newIFS
+    }
+    
     var body: some View {
         VStack {
-            if isDesignView {
+            switch currentView {
+            case .design:
                 IFSDesignView(transforms: $transforms, size: $designerSize).padding(20)
-            } else {
+            case .visualize:
+                IFSVisualizeView(ifs).padding(20)
+            case .image:
                 IFSImageView(ifs: ifs).padding(20)
             }
-            Button("Toggle Render") {
-                if isDesignView {
-                    let normalizeTr = getUnitRecToUpsideDown(size: designerSize).inverted()
-                    let newIFS = IFSSystem()
-                    for t in transforms {
-                        newIFS.addTransform(
-                            t.toCGAffineTransform(normalizeTr)
-                        )
-                    }
-                    ifs = newIFS
+            HStack {
+                Button("Design") {
+                    currentView = .design
                 }
-                isDesignView.toggle()
+                Button("Visualize") {
+                    updateIFS()
+                    currentView = .visualize
+                }
+                Button("Image") {
+                    updateIFS()
+                    currentView = .image
+                }
             }
         }
     }

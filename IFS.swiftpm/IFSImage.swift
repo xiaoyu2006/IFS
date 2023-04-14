@@ -50,6 +50,8 @@ import SwiftUI
 struct IFSImageView: View {
     @ObservedObject public var ifs: IFSSystem
     public var chaosSamples = 20000
+    public var diameter: CGFloat = 10.0
+    let upscaling: CGFloat = 4
     
     @State private var image: CGImage?
     
@@ -57,8 +59,10 @@ struct IFSImageView: View {
         GeometryReader { geometry in
             VStack {
                 if let cgImage = image {
-                    Image(cgImage, scale: 4, label: Text("IFS Result"))
-                        .frame(width: geometry.size.width, height: geometry.size.height)
+                    ZoomableScrollView {
+                        Image(cgImage, scale: upscaling, label: Text("IFS Result"))
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                    }
                 } else {
                     Text("Loading...")
                         .frame(width: geometry.size.width, height: geometry.size.height)
@@ -74,7 +78,7 @@ struct IFSImageView: View {
     }
     
     private func createCustomImage(size: CGSize) -> CGImage {
-        let renderSize = CGSize(width: size.width * 4, height: size.height * 4)
+        let renderSize = CGSize(width: size.width * upscaling, height: size.height * upscaling)
         
         func drawDot(in context: CGContext, at point: CGPoint, withColor color: CGColor, diameter: CGFloat) {
             let rect = CGRect(x: point.x - diameter/2, y: point.y - diameter/2, width: diameter, height: diameter)
@@ -86,7 +90,7 @@ struct IFSImageView: View {
         let tr = getUnitRecTo(size: renderSize)
         for _ in 0 ..< chaosSamples {
             let point: CGPoint = ifs.chaosGameStep().applying(tr)
-            drawDot(in: context, at: point, withColor: CGColor(red: 0, green: 0, blue: 1, alpha: 1), diameter: 6)
+            drawDot(in: context, at: point, withColor: CGColor(red: 0, green: 0, blue: 1, alpha: 1), diameter: diameter)
         }
         return context.makeImage()!
     }

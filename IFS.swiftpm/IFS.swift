@@ -3,7 +3,7 @@ import Foundation
 class IFSSystem: ObservableObject {
     var position: CGPoint = CGPoint(x: 0.5, y: 0.5)
     @Published var transforms: [CGAffineTransform] = []
-    var transformWeight: [Double] = []
+    private var transformWeight: [Double] = []
     private var totalTransformWeight: Double = 0
     
     init() {}
@@ -18,7 +18,7 @@ class IFSSystem: ObservableObject {
         let choice = Double.random(in: 0...totalTransformWeight)
         var current: Double = 0
         var currentIndex = 0
-        while (current < choice) {
+        while (current <= choice) {
             current += transformWeight[currentIndex]
             currentIndex += 1
         }
