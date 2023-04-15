@@ -81,23 +81,12 @@ struct IFSVisualizeView: View {
         HStack {
             ChildSizeReader(size: $size) {
                 ZoomableScrollView {
-                    if let image = uiImage {
+                    if let image = uiImage, !isIterating {
                         Image(uiImage: image)
                             .resizable().scaledToFit()
                     } else {
                         Text("Rendering...")
-                        
                     }
-//                    Canvas { ctx, size in
-//                        for t in displayData {
-//                            ctx.fill(
-//                                t.toPath(
-//                                    normalize: getUnitRecToUpsideDown(size: size)
-//                                ),
-//                                with: .color(Color(red: 0, green: 0, blue: 1, opacity: 0.1))
-//                            )
-//                        }
-//                    }
                 }
             }
             .border(.black)
