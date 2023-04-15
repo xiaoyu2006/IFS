@@ -66,7 +66,7 @@ struct IFSVisualizeView: View {
                 for p in displayData {
                     let path = p.toPath(normalize: normalizeTr)
                     ctx.cgContext.addPath(path.cgPath)
-                    ctx.cgContext.setFillColor(CGColor(red: 0, green: 0, blue: 1, alpha: 0.1))
+                    ctx.cgContext.setFillColor(CGColor(red: 0, green: 0, blue: 1, alpha: 0.3))
                     ctx.cgContext.fillPath()
                 }
             }

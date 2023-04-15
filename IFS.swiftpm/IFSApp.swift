@@ -18,7 +18,7 @@ struct MainView: View {
     
     @State var ifs: IFSSystem = IFSSystem()
     @State var currentView: Displaying = .design
-    @State var transforms = [AffineTransform(), AffineTransform()]
+    @State var transforms = [RepresentedAffineTransform(), RepresentedAffineTransform()]
     @State var designerSize: CGSize = CGSize.zero
     
     //        ifs = IFSSystem()

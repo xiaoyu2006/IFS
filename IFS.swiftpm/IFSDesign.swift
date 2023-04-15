@@ -1,15 +1,22 @@
 import SwiftUI
 
-class AffineTransform: Identifiable, ObservableObject {
+class RepresentedAffineTransform: Identifiable, ObservableObject {
     var id = UUID()
     @Published public var iHatLoc: CGPoint
     @Published public var jHatLoc: CGPoint
     @Published public var shiftLoc: CGPoint
     
-    init() {
-        iHatLoc = CGPoint.rand01() * 300
-        jHatLoc = CGPoint.rand01() * 300
-        shiftLoc = CGPoint.rand01() * 100
+    init(_ iHatLoc: CGPoint, _ jHatLoc: CGPoint, _ shift: CGPoint) {
+        self.iHatLoc = iHatLoc
+        self.jHatLoc = jHatLoc
+        self.shiftLoc = shift
+    }
+    
+    convenience init() {
+        let shift = CGPoint.rand01() * 100
+        let iHat = CGPoint.rand01() * 300 + shift
+        let jHat = CGPoint.rand01() * 300 + shift
+        self.init(iHat, jHat, shift)
     }
     
     func toCGAffineTransform(_ normalize: CGAffineTransform) -> CGAffineTransform {
@@ -24,12 +31,12 @@ class AffineTransform: Identifiable, ObservableObject {
     }
 }
 
-typealias AffineTransforms = [AffineTransform]
+typealias RepresentedAffineTransforms = [RepresentedAffineTransform]
 
 struct DraggableCircle: View {
     @Binding var location: CGPoint
     @GestureState private var startLocation: CGPoint? = nil
-    @ScaledMetric(relativeTo: .body) var circleSize: CGFloat = 20
+    @ScaledMetric(relativeTo: .body) var circleSize: CGFloat = 24
     var color: Color
     var text: String?
     
@@ -54,7 +61,7 @@ struct DraggableCircle: View {
 }
 
 struct AffineTransformControl: View {
-    @EnvironmentObject var transform: AffineTransform
+    @EnvironmentObject var transform: RepresentedAffineTransform
     @GestureState var startShiftLoc: CGPoint? = nil
     @GestureState var startILoc: CGPoint? = nil
     @GestureState var startJLoc: CGPoint? = nil
@@ -91,7 +98,7 @@ struct AffineTransformControl: View {
 }
 
 struct IFSDesignView: View {
-    @Binding var transforms: AffineTransforms
+    @Binding var transforms: RepresentedAffineTransforms
     @Binding var size: CGSize
     
     var body: some View {
@@ -104,8 +111,19 @@ struct IFSDesignView: View {
             }
             .border(.black)
             .aspectRatio(CGSize(width: 1, height: 1), contentMode: .fit)
-            Button("Add Transform") {
-                transforms.append(AffineTransform())
+            VStack {
+                Button("Add Transform") {
+                    transforms.append(RepresentedAffineTransform())
+                }
+                Button("Clear") {
+                    transforms.removeAll()
+                    transforms.append(RepresentedAffineTransform())
+                }
+//                ForEach(transforms) { t in
+//                    Text(
+//                        "\(t.toCGAffineTransform(getUnitRecToUpsideDown(size: size)))"
+//                    )
+//                }
             }
         }
     }
