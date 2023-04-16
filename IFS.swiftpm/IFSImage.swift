@@ -10,20 +10,29 @@ struct IFSImageView: View {
     @State private var uiImage: UIImage?
     
     var body: some View {
-        ChildSizeReader(size: $size) {
-            ZoomableScrollView {
+        HStack {
+            Button("Save Image") {
                 if let image = uiImage {
-                    Image(uiImage: image)
-                        .resizable().scaledToFit()
-                } else {
-                    Text("Rendering...")
-                        .frame(width: size.width, height: size.height)
+                    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
                 }
             }
-            .border(.black)
-            .aspectRatio(CGSize(width: 1, height: 1), contentMode: .fit)
-            .onAppear {
-                renderImageAsync(size: size)
+            Group {
+                ChildSizeReader(size: $size) {
+                    ZoomableScrollView {
+                        if let image = uiImage {
+                            Image(uiImage: image)
+                                .resizable().scaledToFit()
+                        } else {
+                            Text("Rendering...")
+                                .frame(width: size.width, height: size.height)
+                        }
+                    }
+                    .border(.black)
+                    .aspectRatio(CGSize(width: 1, height: 1), contentMode: .fit)
+                    .onAppear {
+                        renderImageAsync(size: size)
+                    }
+                }
             }
         }
     }

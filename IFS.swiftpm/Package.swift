@@ -30,6 +30,9 @@ let package = Package(
                 .landscapeRight,
                 .landscapeLeft
             ],
+            capabilities: [
+                .photoLibraryAdd(purposeString: "Save rendered image.")
+            ],
             appCategory: .education
         )
     ],
