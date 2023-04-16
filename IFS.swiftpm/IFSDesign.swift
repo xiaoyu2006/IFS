@@ -1,6 +1,14 @@
 import SwiftUI
 
-class RepresentedAffineTransform: Identifiable, ObservableObject {
+class RepresentedAffineTransform: Identifiable, ObservableObject, Equatable {
+    static func == (lhs: RepresentedAffineTransform, rhs: RepresentedAffineTransform) -> Bool {
+        return (
+            (lhs.iHatLoc == rhs.iHatLoc) &&
+            (lhs.jHatLoc == rhs.jHatLoc) &&
+            (lhs.shiftLoc == rhs.shiftLoc)
+        )
+    }
+    
     var id = UUID()
     @Published public var iHatLoc: CGPoint
     @Published public var jHatLoc: CGPoint
@@ -10,6 +18,15 @@ class RepresentedAffineTransform: Identifiable, ObservableObject {
         self.iHatLoc = iHatLoc
         self.jHatLoc = jHatLoc
         self.shiftLoc = shift
+    }
+    
+    func from(new: CGAffineTransform, normalizeTr: CGAffineTransform) {
+        let shift = CGPoint(x: new.tx, y: new.ty)
+        let iHat = CGPoint(x: new.a, y: new.b) + shift
+        let jHat = CGPoint(x: new.c, y: new.d) + shift
+        self.iHatLoc = iHat.applying(normalizeTr)
+        self.jHatLoc = jHat.applying(normalizeTr)
+        self.shiftLoc = shift.applying(normalizeTr)
     }
     
     convenience init() {
@@ -32,6 +49,18 @@ class RepresentedAffineTransform: Identifiable, ObservableObject {
 }
 
 typealias RepresentedAffineTransforms = [RepresentedAffineTransform]
+
+extension RepresentedAffineTransforms {
+    func toIFS(_ normalizeTr: CGAffineTransform) -> IFSSystem {
+        let ifs = IFSSystem()
+        for t in self {
+            ifs.addTransform(
+                t.toCGAffineTransform(normalizeTr)
+            )
+        }
+        return ifs
+    }
+}
 
 struct DraggableCircle: View {
     @Binding var location: CGPoint
@@ -103,15 +132,7 @@ struct IFSDesignView: View {
     
     var body: some View {
         HStack {
-            ChildSizeReader(size: $size) {
-                ForEach(transforms){ t in
-                    AffineTransformControl(color: Color(red: 0, green: 1, blue: 0, opacity: 0.1))
-                        .environmentObject(t)
-                }
-            }
-            .border(.black)
-            .aspectRatio(CGSize(width: 1, height: 1), contentMode: .fit)
-            VStack {
+            VStack(alignment: .leading, spacing: 20) {
                 Button("Add Transform") {
                     transforms.append(RepresentedAffineTransform())
                 }
@@ -119,12 +140,15 @@ struct IFSDesignView: View {
                     transforms.removeAll()
                     transforms.append(RepresentedAffineTransform())
                 }
-//                ForEach(transforms) { t in
-//                    Text(
-//                        "\(t.toCGAffineTransform(getUnitRecToUpsideDown(size: size)))"
-//                    )
-//                }
             }
+            ChildSizeReader(size: $size) {
+                ForEach(transforms) { t in
+                    AffineTransformControl(color: Color(red: 0, green: 1, blue: 0, opacity: 0.1))
+                        .environmentObject(t)
+                }
+            }
+            .border(.black)
+            .aspectRatio(CGSize(width: 1, height: 1), contentMode: .fit)
         }
     }
 }

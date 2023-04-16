@@ -1,0 +1,32 @@
+{
+  "pins" : [
+    {
+      "identity" : "steps",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/asam139/Steps",
+      "state" : {
+        "revision" : "dceb16ce8fe315ab04ea621c02bd94ff7dcba509",
+        "version" : "0.3.7"
+      }
+    },
+    {
+      "identity" : "swifterswiftui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/asam139/SwifterSwiftUI.git",
+      "state" : {
+        "revision" : "e69419dd7cdf3bb7df315978530d621d69c98b88",
+        "version" : "0.5.1"
+      }
+    },
+    {
+      "identity" : "viewinspector",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nalexn/ViewInspector",
+      "state" : {
+        "revision" : "4effbd9143ab797eb60d2f32d4265c844c980946",
+        "version" : "0.9.5"
+      }
+    }
+  ],
+  "version" : 2
+}

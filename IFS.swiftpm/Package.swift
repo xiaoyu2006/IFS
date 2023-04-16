@@ -27,17 +27,21 @@ let package = Package(
                 .phone
             ],
             supportedInterfaceOrientations: [
-                .portrait,
                 .landscapeRight,
-                .landscapeLeft,
-                .portraitUpsideDown(.when(deviceFamilies: [.pad]))
+                .landscapeLeft
             ],
             appCategory: .education
         )
     ],
+    dependencies: [
+        .package(url: "https://github.com/asam139/Steps", "0.3.7"..<"1.0.0")
+    ],
     targets: [
         .executableTarget(
             name: "AppModule",
+            dependencies: [
+                .product(name: "Steps", package: "steps")
+            ],
             path: "."
         )
     ]

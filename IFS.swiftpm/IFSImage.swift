@@ -3,9 +3,9 @@ import SwiftUI
 struct IFSImageView: View {
     @ObservedObject public var ifs: IFSSystem
     @State var size = CGSize.zero
-    public var chaosSamples = 30000
+    public var chaosSamples = 40000
     public var diameter: CGFloat = 10.0
-    let upscaling: CGFloat = 8
+    let upscaling: CGFloat = 4
     
     @State private var uiImage: UIImage?
     
@@ -44,9 +44,9 @@ struct IFSImageView: View {
             
             let image = renderer.image { ctx in
                 for _ in 0 ..< chaosSamples {
-                    let p = ifs.chaosGameStep().applying(normalizeTr)
-                    let color = CGColor(red: 0, green: 0, blue: 1, alpha: 1)
-                    drawDot(in: ctx.cgContext, at: p, withColor: color, diameter: 6)
+                    var p = ifs.chaosGameStep()
+                    p.0 = p.0.applying(normalizeTr)
+                    drawDot(in: ctx.cgContext, at: p.0, withColor: p.1, diameter: 6)
                 }
             }
             

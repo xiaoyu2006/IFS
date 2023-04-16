@@ -79,6 +79,17 @@ struct IFSVisualizeView: View {
     
     var body: some View {
         HStack {
+            VStack(alignment: .leading) {
+                Button("Iterate") {
+                    isIterating = true
+                    DispatchQueue.global(qos: .background).async {
+                        iterate()
+                        renderPathsToImageAsync()
+                    }
+                }
+                .disabled(isIterating)
+                Text("Depth: \(depth)")
+            }
             ChildSizeReader(size: $size) {
                 ZoomableScrollView {
                     if let image = uiImage, !isIterating {
@@ -93,17 +104,6 @@ struct IFSVisualizeView: View {
             .aspectRatio(CGSize(width: 1, height: 1), contentMode: .fit)
             .onAppear {
                 renderPathsToImageAsync()
-            }
-            VStack {
-                Button("Iterate") {
-                    isIterating = true
-                    DispatchQueue.global(qos: .background).async {
-                        iterate()
-                        renderPathsToImageAsync()
-                    }
-                }
-                .disabled(isIterating)
-                Text("Depth: \(depth)")
             }
         }
     }
