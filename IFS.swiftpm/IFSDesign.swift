@@ -109,7 +109,7 @@ struct AffineTransformControl: View {
     var body: some View {
         DraggableCircle(location: $transform.iHatLoc, color: Color.blue, text: "i")
         DraggableCircle(location: $transform.jHatLoc, color: Color.red, text: "j")
-        DraggableCircle(location: $transform.shiftLoc, color: Color.black)
+        DraggableCircle(location: $transform.shiftLoc, color: Color.black, text: "O")
 //        Line()
         Path { path in
             path.move(to: transform.iHatLoc)
@@ -145,16 +145,21 @@ struct IFSDesignView: View {
             VStack(alignment: .leading, spacing: 20) {
                 Text("A transform includes rotations, translations and resizing. It can be visualized as a trapezoid, where each point of the unit square is mapped into that trapezoid.").lineLimit(nil)
                 Image("Tr").resizable().scaledToFit()
-                Text("For your first attempt, you can try the following transforms. Use `Clear` / `Add Transform` buttons and the draggable circles to help you design your IFS. Note that *black* to *i* is the original button of the image and *black* to *j* is the left side of the image.").lineLimit(nil)
+                Text("For your first attempt, you can try the following transforms. (*Which actually describes the Sierpiński Triangle*) Use `Clear` / `Add Transform` buttons and the draggable circles to help you design your IFS. Note that **O** to **i** is the original bottom of the image and **O** to **j** is the original left side of the image.").lineLimit(nil)
                 Image("Attempt").resizable().scaledToFit()
                 
-                Button("Add Transform") {
-                    transforms.append(RepresentedAffineTransform())
+                HStack {
+                    Button("Add Transform") {
+                        transforms.append(RepresentedAffineTransform())
+                    }
+                    Spacer()
+                    Button("Clear") {
+                        transforms.removeAll()
+                        transforms.append(RepresentedAffineTransform())
+                    }
                 }
-                Button("Clear") {
-                    transforms.removeAll()
-                    transforms.append(RepresentedAffineTransform())
-                }
+                
+                Text("When you're sone, click on **Next**.")
                 
                 Spacer()
             }

@@ -89,8 +89,10 @@ struct IFSVisualizeView: View {
                         renderPathsToImageAsync()
                     }
                 }
-                .disabled(isIterating)
+                .disabled(isIterating || (displayData.count > 10000))
+                
                 Text("Depth: \(depth)")
+                Text("Total shapes: \(displayData.count)")
                 
                 Spacer()
             }
