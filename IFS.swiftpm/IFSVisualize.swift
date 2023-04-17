@@ -79,7 +79,9 @@ struct IFSVisualizeView: View {
     
     var body: some View {
         HStack {
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 20) {
+                Text("Here you can observe how the fractal is built. Each time you click on iterate, every trapezoid is replaced by the whole image fitting in itself.").lineLimit(nil)
+                
                 Button("Iterate") {
                     isIterating = true
                     DispatchQueue.global(qos: .background).async {
@@ -89,7 +91,10 @@ struct IFSVisualizeView: View {
                 }
                 .disabled(isIterating)
                 Text("Depth: \(depth)")
+                
+                Spacer()
             }
+            .frame(width: SIDEBAR_WIDTH, alignment: .leading)
             ChildSizeReader(size: $size) {
                 ZoomableScrollView {
                     if let image = uiImage, !isIterating {

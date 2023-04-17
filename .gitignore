@@ -109,3 +109,5 @@ xcuserdata
 
 # End of https://www.toptal.com/developers/gitignore/api/swift,xcode,swiftpm,swiftpackagemanager
 
+.DS_Store
+

@@ -11,11 +11,19 @@ struct IFSImageView: View {
     
     var body: some View {
         HStack {
-            Button("Save Image") {
-                if let image = uiImage {
-                    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+            VStack(alignment: .leading, spacing: 20) {
+                Text("Congrats!").font(.headline)
+                Text("You have successfully created your fractal! You can save it to your album when it's rendered.").lineLimit(nil)
+                
+                Button("Save Image") {
+                    if let image = uiImage {
+                        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                    }
                 }
+                
+                Spacer()
             }
+            .frame(width: SIDEBAR_WIDTH, alignment: .leading)
             Group {
                 ChildSizeReader(size: $size) {
                     ZoomableScrollView {

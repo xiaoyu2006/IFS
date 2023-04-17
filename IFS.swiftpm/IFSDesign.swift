@@ -89,6 +89,15 @@ struct DraggableCircle: View {
     }
 }
 
+struct Line: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.minX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
+        return path
+    }
+}
+
 struct AffineTransformControl: View {
     @EnvironmentObject var transform: RepresentedAffineTransform
     @GestureState var startShiftLoc: CGPoint? = nil
@@ -101,6 +110,7 @@ struct AffineTransformControl: View {
         DraggableCircle(location: $transform.iHatLoc, color: Color.blue, text: "i")
         DraggableCircle(location: $transform.jHatLoc, color: Color.red, text: "j")
         DraggableCircle(location: $transform.shiftLoc, color: Color.black)
+//        Line()
         Path { path in
             path.move(to: transform.iHatLoc)
             path.addLine(to: transform.shiftLoc)
@@ -133,6 +143,11 @@ struct IFSDesignView: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 20) {
+                Text("A transform includes rotations, translations and resizing. It can be visualized as a trapezoid, where each point of the unit square is mapped into that trapezoid.").lineLimit(nil)
+                Image("Tr").resizable().scaledToFit()
+                Text("For your first attempt, you can try the following transforms. Use `Clear` / `Add Transform` buttons and the draggable circles to help you design your IFS. Note that *black* to *i* is the original button of the image and *black* to *j* is the left side of the image.").lineLimit(nil)
+                Image("Attempt").resizable().scaledToFit()
+                
                 Button("Add Transform") {
                     transforms.append(RepresentedAffineTransform())
                 }
@@ -140,7 +155,10 @@ struct IFSDesignView: View {
                     transforms.removeAll()
                     transforms.append(RepresentedAffineTransform())
                 }
+                
+                Spacer()
             }
+            .frame(width: SIDEBAR_WIDTH, alignment: .leading)
             ChildSizeReader(size: $size) {
                 ForEach(transforms) { t in
                     AffineTransformControl(color: Color(red: 0, green: 1, blue: 0, opacity: 0.1))
