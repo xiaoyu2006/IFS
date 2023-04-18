@@ -73,6 +73,7 @@ struct DraggableCircle: View {
     var body: some View {
         Circle().fill(color)
             .frame(width: circleSize, height: circleSize)
+            .contentShape(Circle().inset(by: -10))
 //            .padding(20)
             .position(location)
             .gesture(DragGesture()
@@ -108,10 +109,9 @@ struct AffineTransformControl: View {
     var color: Color
     
     var body: some View {
-        DraggableCircle(location: $transform.iHatLoc, color: Color.blue, text: "i")
-        DraggableCircle(location: $transform.jHatLoc, color: Color.red, text: "j")
-        DraggableCircle(location: $transform.shiftLoc, color: Color.black, text: "O")
-//        Line()
+        DraggableCircle(location: $transform.iHatLoc, color: Color.blue, text: "i").zIndex(1000)
+        DraggableCircle(location: $transform.jHatLoc, color: Color.red, text: "j").zIndex(1000)
+        DraggableCircle(location: $transform.shiftLoc, color: Color.black, text: "O").zIndex(1000)
         Path { path in
             path.move(to: transform.iHatLoc)
             path.addLine(to: transform.shiftLoc)
@@ -120,7 +120,6 @@ struct AffineTransformControl: View {
             path.addLine(to: transform.shiftLoc + ijHat)
         }
         .fill(color)
-        .zIndex(-1000)
         .gesture(DragGesture()
             .onChanged { value in
                 let t = value.location - value.startLocation
@@ -134,6 +133,7 @@ struct AffineTransformControl: View {
             }.updating($startJLoc) { (value, state, transaction) in
                 state = state ?? transform.jHatLoc
             })
+        .zIndex(-1000)
     }
 }
 
