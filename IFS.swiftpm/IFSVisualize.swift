@@ -36,8 +36,9 @@ struct IFSVisualizeView: View {
     @State var size: CGSize = CGSize.zero
     @State var displayData: [IdentifiableCGAffineTransform]
     @State var depth: Int = 1
-    @State var isIterating = false
     @State var uiImage: UIImage? = nil
+    
+    func reachedMaxIter() -> Bool { displayData.count > 10_000 }
 
     init(_ ifs: IFSSystem) {
         self.ifs = ifs
@@ -72,7 +73,6 @@ struct IFSVisualizeView: View {
             }
             DispatchQueue.main.async {
                 uiImage = image
-                isIterating = false
             }
         }
     }
@@ -81,35 +81,37 @@ struct IFSVisualizeView: View {
         HStack {
             VStack(alignment: .leading, spacing: 10) {
                 Text("Here you can observe how the fractal is built. Each time you click on iterate, every trapezoid is replaced by the whole image fitting in itself.").lineLimit(nil)
+
+                Group {
+                    Text("If you followed the Sierpiński example closely, you will have noticed the image filling itself with an exact replica of itself.").lineLimit(nil)
+                    Image("I1").resizable().scaledToFit()
+                    HStack {
+                        Image("I2").resizable().scaledToFit()
+                        Image("I3").resizable().scaledToFit()
+                    }
+                }
                 
+                HStack {
+                    Text("Current iterations: \(depth)")
+                    Spacer()
+                    Text("Total shapes: \(displayData.count)")
+                }
+
                 Button {
-                    isIterating = true
                     DispatchQueue.global(qos: .background).async {
                         iterate()
                         renderPathsToImageAsync()
                     }
                 } label: {
-                    Text("**Iterate**")
-                }
-                
-                .disabled(isIterating || (displayData.count > 50000))
-                
-                Text("Depth: \(depth)")
-                Text("Total shapes: \(displayData.count)")
-                
-                Group {
-                    Text("If you followed the Sierpiński example closely, you will have noticed the image filling itself with an exact replica of itself.").lineLimit(nil)
-                    Image("I1").resizable().scaledToFit()
-                    Image("I2").resizable().scaledToFit()
-                    Image("I3").resizable().scaledToFit()
-                }
-                
+                    Text(reachedMaxIter() ? "Too many shapes" : "**Do Iterate**")
+                }.disabled(uiImage == nil || (reachedMaxIter()))
+
                 Spacer()
             }
             .frame(width: SIDEBAR_WIDTH, alignment: .leading)
             ChildSizeReader(size: $size) {
                 ZoomableScrollView {
-                    if let image = uiImage, !isIterating {
+                    if let image = uiImage {
                         Image(uiImage: image)
                             .resizable().scaledToFit()
                     } else {

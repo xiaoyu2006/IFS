@@ -18,14 +18,15 @@ struct BasicInstructionsView: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 10) {
                 Text("Iterated Function System").lineLimit(nil).font(.largeTitle)
                 Text("You might have seen the following image before, it's called a Sierpiński triangle, which is named after the Polish mathematician Wacław Sierpiński.").lineLimit(nil)
-                Image("Sierpinski", label: Text("Sierpinski")).resizable().scaledToFit().scaleEffect(0.8)
+                Image("Sierpinski", label: Text("Sierpinski")).resizable().padding(10).scaledToFit()
                 Text("One of its significant properties is that it's a fracture: the image is self-similar to itself. If you zoom in on the triangle, you'll get exactly itself.").lineLimit(nil)
                 Text("An Iterated Function System (IFS) is a method for creating such fractals by repeatedly applying a set of functions such as scaling, rotation, or translation to itself. The resulting shape is the union of all the transformed copies of the initial shape.").lineLimit(nil)
                 Text("IFSs can be used to create a wide variety of fractals, including the Sierpiński triangle, the Koch snowflake, and the Barnsley fern. The Sierpiński triangle can be described using the following IFS:").lineLimit(nil)
                 Image("Attempt").resizable().scaledToFit().scaleEffect(0.8)
+                Text("Let's get started!")
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -99,6 +100,22 @@ struct MainView: View {
         }
         .sheet(isPresented: $isInstructionsPresented) {
             BasicInstructionsView(isPresented: $isInstructionsPresented).preferredColorScheme(.light)
+        }
+        .onChange(of: designerSize) { _ in
+            let tr1 = CGAffineTransform(iHat: CGPoint(x: 0.5, y: 0),
+                                        jHat: CGPoint(x: 0, y: 0.5),
+                                        shift: CGPoint.zero)
+            let tr2 = CGAffineTransform(iHat: CGPoint(x: 0.5, y: 0),
+                                        jHat: CGPoint(x: 0, y: 0.5),
+                                        shift: CGPoint(x: 0.5, y: 0))
+            let tr3 = CGAffineTransform(iHat: CGPoint(x: 0.5, y: 0),
+                                        jHat: CGPoint(x: 0, y: 0.5),
+                                        shift: CGPoint(x: 0.25, y: 0.433))
+            let normalizeTr = getUnitRecToUpsideDown(size: designerSize)
+            let rTr1 = RepresentedAffineTransform(from: tr1, normalizeTr: normalizeTr)
+            let rTr2 = RepresentedAffineTransform(from: tr2, normalizeTr: normalizeTr)
+            let rTr3 = RepresentedAffineTransform(from: tr3, normalizeTr: normalizeTr)
+            transforms = [rTr1, rTr2, rTr3]
         }
     }
 }

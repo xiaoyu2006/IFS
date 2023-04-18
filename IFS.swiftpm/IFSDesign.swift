@@ -36,6 +36,15 @@ class RepresentedAffineTransform: Identifiable, ObservableObject, Equatable {
         self.init(iHat, jHat, shift)
     }
     
+    init(from new: CGAffineTransform, normalizeTr: CGAffineTransform) {
+        let shift = CGPoint(x: new.tx, y: new.ty)
+        let iHat = CGPoint(x: new.a, y: new.b) + shift
+        let jHat = CGPoint(x: new.c, y: new.d) + shift
+        self.iHatLoc = iHat.applying(normalizeTr)
+        self.jHatLoc = jHat.applying(normalizeTr)
+        self.shiftLoc = shift.applying(normalizeTr)
+    }
+    
     func toCGAffineTransform(_ normalize: CGAffineTransform) -> CGAffineTransform {
         let iHatNorm: CGPoint = iHatLoc.applying(normalize)
         let jHatNorm: CGPoint = jHatLoc.applying(normalize)
@@ -74,7 +83,6 @@ struct DraggableCircle: View {
         Circle().fill(color)
             .frame(width: circleSize, height: circleSize)
             .contentShape(Circle().inset(by: -10))
-//            .padding(20)
             .position(location)
             .gesture(DragGesture()
                 .onChanged { value in
@@ -144,23 +152,29 @@ struct IFSDesignView: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 10) {
-                Text("A transform includes rotations, translations and resizing. It can be visualized as a trapezoid, where each point of the unit square is mapped into that trapezoid.").lineLimit(nil)
+                Text("Transforms are the heart of IFS. A transform includes rotations, translations and resizing. It can be visualized as a trapezoid, where each point of the unit square is mapped into that trapezoid.").lineLimit(nil)
+                
                 Image("Tr").resizable().scaledToFit()
-                Text("For your first attempt, you can try the following transforms. Use `Clear` / `Add Transform` buttons and the draggable circles to help you design your IFS. Note that **O** to **i** is the original bottom of the image and **O** to **j** is the original left side of the image.").lineLimit(nil)
-                Image("Attempt").resizable().scaledToFit()
+                
+                Text("The default IFS design is exactly the Sierpiński triangle.")
+                
+                Text("Use `Clear` / `Add Transform` buttons and the draggable circles to help you design your *own* IFS. Note that **O** to **i** is the original bottom of the image and **O** to **j** is the original left side of the image.").lineLimit(nil)
+                
+                Text("When you're done, click on **Next**.")
                 
                 HStack {
-                    Button("Add Transform") {
+                    Button {
                         transforms.append(RepresentedAffineTransform())
+                    } label: {
+                        Text("**Add Transform**")
                     }
                     Spacer()
                     Button("Clear") {
                         transforms.removeAll()
                         transforms.append(RepresentedAffineTransform())
                     }
+                    Spacer(minLength: 5)
                 }
-                
-                Text("When you're done, click on **Next**.")
                 
                 Spacer()
             }

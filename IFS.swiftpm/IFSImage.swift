@@ -23,7 +23,7 @@ struct IFSImageView: View {
     @State public var sliderValue: Double = 40000
     @State public var isGalleryPresent: Bool = false
     
-    public var diameter: CGFloat = 2.0
+    public var diameter: CGFloat = 4.0
     let upscaling: CGFloat = 4
     
     @State private var uiImage: UIImage?
@@ -116,7 +116,7 @@ struct IFSImageView: View {
                 for _ in 0 ..< chaosSamples {
                     var p = ifs.chaosGameStep()
                     p.0 = p.0.applying(normalizeTr)
-                    drawDot(in: ctx.cgContext, at: p.0, withColor: p.1, diameter: 6)
+                    drawDot(in: ctx.cgContext, at: p.0, withColor: p.1, diameter: diameter)
                 }
             }
             
