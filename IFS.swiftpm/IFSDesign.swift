@@ -73,6 +73,7 @@ struct DraggableCircle: View {
     var body: some View {
         Circle().fill(color)
             .frame(width: circleSize, height: circleSize)
+//            .padding(20)
             .position(location)
             .gesture(DragGesture()
                 .onChanged { value in
@@ -142,10 +143,10 @@ struct IFSDesignView: View {
     
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 10) {
                 Text("A transform includes rotations, translations and resizing. It can be visualized as a trapezoid, where each point of the unit square is mapped into that trapezoid.").lineLimit(nil)
                 Image("Tr").resizable().scaledToFit()
-                Text("For your first attempt, you can try the following transforms. (*Which actually describes the Sierpiński Triangle*) Use `Clear` / `Add Transform` buttons and the draggable circles to help you design your IFS. Note that **O** to **i** is the original bottom of the image and **O** to **j** is the original left side of the image.").lineLimit(nil)
+                Text("For your first attempt, you can try the following transforms. Use `Clear` / `Add Transform` buttons and the draggable circles to help you design your IFS. Note that **O** to **i** is the original bottom of the image and **O** to **j** is the original left side of the image.").lineLimit(nil)
                 Image("Attempt").resizable().scaledToFit()
                 
                 HStack {
@@ -159,15 +160,17 @@ struct IFSDesignView: View {
                     }
                 }
                 
-                Text("When you're sone, click on **Next**.")
+                Text("When you're done, click on **Next**.")
                 
                 Spacer()
             }
             .frame(width: SIDEBAR_WIDTH, alignment: .leading)
             ChildSizeReader(size: $size) {
-                ForEach(transforms) { t in
-                    AffineTransformControl(color: Color(red: 0, green: 1, blue: 0, opacity: 0.1))
-                        .environmentObject(t)
+                ZStack {
+                    ForEach(transforms) { t in
+                        AffineTransformControl(color: Color(red: 0, green: 1, blue: 0, opacity: 0.1))
+                            .environmentObject(t)
+                    }
                 }
             }
             .border(.black)

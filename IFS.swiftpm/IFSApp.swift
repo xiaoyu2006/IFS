@@ -18,12 +18,14 @@ struct BasicInstructionsView: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 30) {
+            VStack(alignment: .leading, spacing: 20) {
                 Text("Iterated Function System").lineLimit(nil).font(.largeTitle)
                 Text("You might have seen the following image before, it's called a Sierpiński triangle, which is named after the Polish mathematician Wacław Sierpiński.").lineLimit(nil)
-                Image("Sierpinski", label: Text("Sierpinski"))
+                Image("Sierpinski", label: Text("Sierpinski")).resizable().scaledToFit().scaleEffect(0.8)
                 Text("One of its significant properties is that it's a fracture: the image is self-similar to itself. If you zoom in on the triangle, you'll get exactly itself.").lineLimit(nil)
-                Text("An Iterated Function System (IFS) is a method for creating such fractals by repeatedly applying a set of functions such as scaling, rotation, or translation to itself. The resulting shape is the union of all the transformed copies of the initial shape. IFSs can be used to create a wide variety of fractals, including the Sierpiński triangle, the Koch snowflake, and the Barnsley fern.").lineLimit(nil)
+                Text("An Iterated Function System (IFS) is a method for creating such fractals by repeatedly applying a set of functions such as scaling, rotation, or translation to itself. The resulting shape is the union of all the transformed copies of the initial shape.").lineLimit(nil)
+                Text("IFSs can be used to create a wide variety of fractals, including the Sierpiński triangle, the Koch snowflake, and the Barnsley fern. The Sierpiński triangle can be described using the following IFS:").lineLimit(nil)
+                Image("Attempt").resizable().scaledToFit().scaleEffect(0.8)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -96,7 +98,7 @@ struct MainView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .sheet(isPresented: $isInstructionsPresented) {
-            BasicInstructionsView(isPresented: $isInstructionsPresented)
+            BasicInstructionsView(isPresented: $isInstructionsPresented).preferredColorScheme(.light)
         }
     }
 }

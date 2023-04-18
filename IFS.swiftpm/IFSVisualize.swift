@@ -79,20 +79,30 @@ struct IFSVisualizeView: View {
     
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 10) {
                 Text("Here you can observe how the fractal is built. Each time you click on iterate, every trapezoid is replaced by the whole image fitting in itself.").lineLimit(nil)
                 
-                Button("Iterate") {
+                Button {
                     isIterating = true
                     DispatchQueue.global(qos: .background).async {
                         iterate()
                         renderPathsToImageAsync()
                     }
+                } label: {
+                    Text("**Iterate**")
                 }
-                .disabled(isIterating || (displayData.count > 10000))
+                
+                .disabled(isIterating || (displayData.count > 50000))
                 
                 Text("Depth: \(depth)")
                 Text("Total shapes: \(displayData.count)")
+                
+                Group {
+                    Text("If you followed the Sierpiński example closely, you will have noticed the image filling itself with an exact replica of itself.").lineLimit(nil)
+                    Image("I1").resizable().scaledToFit()
+                    Image("I2").resizable().scaledToFit()
+                    Image("I3").resizable().scaledToFit()
+                }
                 
                 Spacer()
             }
