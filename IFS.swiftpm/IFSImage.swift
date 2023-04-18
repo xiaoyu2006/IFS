@@ -40,7 +40,7 @@ struct IFSImageView: View {
                     }
                 }.disabled(uiImage == nil)
                 
-                Text("The render section utilizes a random-based algorithm that efficiently generates fractals without consuming excessive resources. Adjust the sample slider below to optimize your fractal's quality.").lineLimit(nil)
+                Text("The render section uses a resource-efficient, random-based algorithm to generate fractals. Adjust the sample slider to optimize quality.").lineLimit(nil)
                 
                 Slider(
                     value: $sliderValue,

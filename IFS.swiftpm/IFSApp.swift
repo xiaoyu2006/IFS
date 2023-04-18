@@ -20,9 +20,9 @@ struct BasicInstructionsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 10) {
                 Text("Iterated Function System").lineLimit(nil).font(.largeTitle)
-                Text("You might have seen the following image before, it's called a Sierpiński triangle, which is named after the Polish mathematician Wacław Sierpiński.").lineLimit(nil)
+                Text("You may recognize the image below, known as the Sierpiński triangle, which is named after the prominent Polish mathematician Wacław Sierpiński.").lineLimit(nil)
                 Image("Sierpinski", label: Text("Sierpinski")).resizable().padding(10).scaledToFit()
-                Text("One of its significant properties is that it's a fracture: the image is self-similar to itself. If you zoom in on the triangle, you'll get exactly itself.").lineLimit(nil)
+                Text("One of its significant properties is that it's a fractal: the image is self-similar to itself. If you zoom in on the triangle, you'll get exactly itself.").lineLimit(nil)
                 Text("An Iterated Function System (IFS) is a method for creating such fractals by repeatedly applying a set of functions such as scaling, rotation, or translation to itself. The resulting shape is the union of all the transformed copies of the initial shape.").lineLimit(nil)
                 Text("IFSs can be used to create a wide variety of fractals, including the Sierpiński triangle, the Koch snowflake, and the Barnsley fern. The Sierpiński triangle can be described using the following IFS:").lineLimit(nil)
                 Image("Attempt").resizable().scaledToFit().scaleEffect(0.8)
